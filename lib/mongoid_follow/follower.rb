@@ -59,7 +59,7 @@ module Mongoid
     # => @bonnie.follows?(@clyde)
     # => true
     def follows?(model)
-      self.followers.where(follower_type: model.class.name, :follower_id => model.id, relation: relation).exists?
+      self.followers.where(follower_type: model.class.name, :follower_id => model.id).exists?
     end
 
     # get followees count
