@@ -15,21 +15,14 @@ module Mongoid
     # => @bonnie.follow(@clyde)
     def follow(model)
       if self.id != model.id && !self.follows?(model)
-        p 1
         model.before_followed_by(self) if model.respond_to?('before_followed_by')
-        p 2
         model.followers.create!(:ff_type => self.class.name, :ff_id => self.id)
-        p 3
-        model.inc(:fferc, 1)
-        p 4
+        model.inc :fferc => 1
         model.after_followed_by(self) if model.respond_to?('after_followed_by')
-        p 5
+        
         self.before_follow(model) if self.respond_to?('before_follow')
-        p 6
         self.followees.create!(:ff_type => model.class.name, :ff_id => model.id)
-        p 7
-        self.inc(:ffeec, 1)
-        p 8
+        self.inc :ffeec => 1
         self.after_follow(model) if self.respond_to?('after_follow')
 
       else
@@ -46,12 +39,12 @@ module Mongoid
 
         model.before_unfollowed_by(self) if model.respond_to?('before_unfollowed_by')
         model.followers.where(:ff_type => self.class.name, :ff_id => self.id).destroy
-        model.inc(:fferc, -1)
+        model.inc :fferc => -1
         model.after_unfollowed_by(self) if model.respond_to?('after_unfollowed_by')
 
         self.before_unfollow(model) if self.respond_to?('before_unfollow')
         self.followees.where(:ff_type => model.class.name, :ff_id => model.id).destroy
-        self.inc(:ffeec, -1)
+        self.inc :ffeec => -1
         self.after_unfollow(model) if self.respond_to?('after_unfollow')
 
       else
