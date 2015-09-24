@@ -24,7 +24,7 @@ module Mongoid
         self.followees.create!(:ff_type => model.class.name, :ff_id => model.id)
         self.inc :ffeec => 1
         self.after_follow(model) if self.respond_to?('after_follow')
-
+        return true
       else
         return false
       end
@@ -46,7 +46,7 @@ module Mongoid
         self.followees.where(:ff_type => model.class.name, :ff_id => model.id).destroy
         self.inc :ffeec => -1
         self.after_unfollow(model) if self.respond_to?('after_unfollow')
-
+        return true
       else
         return false
       end
